@@ -9,35 +9,35 @@
 import UIKit
 
 @IBDesignable
-public class PasscodeSignPlaceholderView: UIView {
+open class PasscodeSignPlaceholderView: UIView {
     
     public enum State {
-        case Inactive
-        case Active
-        case Error
+        case inactive
+        case active
+        case error
     }
-    
-    @IBInspectable
-    public var inactiveColor: UIColor = UIColor.whiteColor() {
-        didSet {
-            setupView()
-        }
-    }
-    
-    @IBInspectable
-    public var activeColor: UIColor = UIColor.grayColor() {
-        didSet {
-            setupView()
-        }
-    }
-    
-    @IBInspectable
-    public var errorColor: UIColor = UIColor.redColor() {
-        didSet {
-            setupView()
-        }
-    }
-    
+
+	@IBInspectable
+	open var inactiveColor: UIColor = UIColor.white {
+		didSet {
+			self.setupView()
+		}
+	}
+
+	@IBInspectable
+	open var activeColor: UIColor = UIColor.gray {
+		didSet {
+			self.setupView()
+		}
+	}
+
+	@IBInspectable
+	open var errorColor: UIColor = UIColor.red {
+		didSet {
+			self.setupView()
+		}
+	}
+
     public override init(frame: CGRect) {
         
         super.init(frame: frame)
@@ -50,45 +50,38 @@ public class PasscodeSignPlaceholderView: UIView {
         super.init(coder: aDecoder)
     }
     
-    public override func intrinsicContentSize() -> CGSize {
+    open override var intrinsicContentSize : CGSize {
         
-        return CGSizeMake(16, 16)
+        return CGSize(width: 16, height: 16)
     }
     
-    private func setupView() {
+	func setupView() {
         
         layer.cornerRadius = 7
         layer.borderWidth = 1
-        layer.borderColor = activeColor.CGColor
+        layer.borderColor = activeColor.cgColor
         backgroundColor = inactiveColor
     }
     
-    private func colorsForState(state: State) -> (backgroundColor: UIColor, borderColor: UIColor) {
+    fileprivate func colorsForState(_ state: State) -> (backgroundColor: UIColor, borderColor: UIColor) {
         
         switch state {
-        case .Inactive: return (inactiveColor, activeColor)
-        case .Active: return (activeColor, activeColor)
-        case .Error: return (errorColor, errorColor)
+        case .inactive: return (inactiveColor, activeColor)
+        case .active: return (activeColor, activeColor)
+        case .error: return (errorColor, errorColor)
         }
     }
     
-    public func animateState(state: State) {
+	open func animateState(_ state: State, completion: (() -> Void)? = nil) {
         
         let colors = colorsForState(state)
-        
-        UIView.animateWithDuration(
-            0.5,
-            delay: 0,
-            usingSpringWithDamping: 1,
-            initialSpringVelocity: 0,
-            options: [],
-            animations: {
-                
-                self.backgroundColor = colors.backgroundColor
-                self.layer.borderColor = colors.borderColor.CGColor
-                
-            },
-            completion: nil
-        )
-    }
+
+		UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations: { [weak self] in
+			self?.backgroundColor = colors.backgroundColor
+			self?.layer.borderColor = colors.borderColor.cgColor
+
+ 		}, completion: nil)
+	}
+
 }
+
